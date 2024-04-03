@@ -7,13 +7,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout source
+      - name: Checkout source
         uses: actions/checkout@v2
-      - name: bundle core
+      - name: Bundle MoonBit core
         uses: ./.github/actions/bundle
-      - name: build packages
+      - name: Build Arch Linux packages
         uses: ./.github/actions/package
-      - name: publish
+      - name: Publish
         uses: ncipollo/release-action@v1
         with:
           artifacts: '*.pkg.tar.zst,core.zip'
