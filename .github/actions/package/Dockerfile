@@ -1,10 +1,11 @@
 FROM quay.io/archlinux/archlinux:base-devel AS base
 
 RUN useradd -d /build -U -G wheel build && \
-    pacman -Syu --noconfirm git
+    pacman -Syu --noconfirm git pacman-contrib sudo && \
+    echo '%wheel ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER build
-WORKDIR /github/workspace
+WORKDIR /build
 
 COPY --chown=build:build entrypoint.sh /entrypoint.sh
 
