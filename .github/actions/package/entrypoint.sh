@@ -3,5 +3,12 @@
 set -xeuo
 
 cp -r /github/workspace/* /build/
-(cd /build && makepkg)
+if (cd /build && makepkg) then
+  echo "makepkg succeeded"
+else
+  echo "makepkg failed, updating checksums..."
+  (cd /build && updpkgsums)
+  (cd /build && makepkg)
+fi
 sudo cp /build/*.pkg.tar.zst /github/workspace
+sudo cp /build/PKGBUILD      /github/workspace
