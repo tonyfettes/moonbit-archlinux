@@ -1,7 +1,7 @@
 # Maintainer: Haoxiang Fei <tonyfettes AT tonyfettes DOT com>
 
 pkgname=moonbit-bin
-pkgver=0.1.0.20240401
+pkgver=0.1.0.20240403
 pkgrel=1
 pkgdesc="Intelligent developer platform for Cloud and Edge using WASM"
 arch=('x86_64')
@@ -25,7 +25,7 @@ sha256sums=('197b04be0e292be8a7797893695b5df0cee736975249b79f2c8919cca6bc66d0'
             '53842027da2c14f2bcceaa803fd0a276043e147ab2052bff8bbce6ee6955c50f'
             'e3df89202105fe5ebdce9c8717b71059ddcd5eed60122783f93b0e4c83663183'
             '81f34a423b2a40ed0c499d1c148a7e33a300ce7c8505146c12586ee81a78458b'
-            'SKIP'
+            '750db712196c09e1c033fede6a996acc359a464b98d0815232d44cbd25699025'
             '58b177a4b0dda035620b8f5f44f1f26a251203924d1df927a8a00e0a78f9c13c')
 
 pkgver() {
