@@ -22,29 +22,35 @@ jobs:
         id: pkgbuild
         run: |
           pkgver=$(git diff PKGBUILD | sed -n -E 's/\+pkgver=//p')
-          echo "TAG=v${pkgver}" >> "$GITHUB_OUTPUT"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add PKGBUILD
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -a -m "chore: update PKGBUILD [skip ci]"
-            git push origin HEAD:main
-          fi
           if [ -z "${pkgver}" ]; then
-            echo "No changes to PKGBUILD"
+            echo "TAG=x" >> "$GITHUB_OUTPUT"
           else
-            git tag "v${pkgver}"
-            git push origin "v${pkgver}"
+            echo "TAG=v${pkgver}" >> "$GITHUB_OUTPUT"
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add PKGBUILD
+            if [ -n "$(git status --porcelain)" ]; then
+              git commit -a -m "chore: update PKGBUILD [skip ci]"
+              git push origin HEAD:main
+            fi
+            if [ -z "${pkgver}" ]; then
+              echo "No changes to PKGBUILD"
+            else
+              git tag "v${pkgver}"
+              git push origin "v${pkgver}"
+            fi
+            sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/v${pkgver}/core.zip\"!g" PKGBUILD
           fi
-          sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/v${pkgver}/core.zip\"!g" PKGBUILD
 
       - name: Publish
+        if: ${{ steps.pkgbuild.outputs.TAG != 'x' }}
         uses: ncipollo/release-action@v1
         with:
           artifacts: '*.pkg.tar.zst,core.zip'
           tag: ${{ steps.pkgbuild.outputs.TAG }}
 
       - name: Publish to AUR
+        if: ${{ steps.pkgbuild.outputs.TAG != 'x' }}
         uses: KSXGitHub/github-actions-deploy-aur@v2
         with:
           pkgname: moonbit-bin
