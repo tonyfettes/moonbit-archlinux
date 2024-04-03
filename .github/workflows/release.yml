@@ -1,0 +1,19 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v2
+      - name: bundle core
+        uses: ./.github/actions/bundle
+      - name: build packages
+        uses: ./.github/actions/package
+      - name: publish
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: '*.pkg.tar.zst,core.zip'
