@@ -14,5 +14,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Bundle MoonBit Core
         uses: ./.github/actions/bundle
-      - name: Build Arch Linux Package
-        uses: ./.github/actions/package
+      - name: Upload MoonBit Core
+        uses: actions/upload-artifact@v4
+        with:
+          name: core.zip
+          path: core.zip

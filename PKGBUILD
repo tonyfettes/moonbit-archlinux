@@ -17,14 +17,16 @@ source=("${_origin}/ubuntu_x86/moon"
         "${_origin}/ubuntu_x86/moonrun"
         "${_origin}/ubuntu_x86/mooninfo"
         "${_origin}/ubuntu_x86/moondoc"
-        "core.zip")
-sha256sums=('1af8998cbbeb29fa1acaabb9dd0c6064940c9f8bb39312df28b6c98be0e4995a'
-            'bbb49fe9a94fb6b39b4a0b18aab5102f1be658157a5daea769423d6eeefdc491'
-            '15d6e5591ddbf7264a9f50955f9cd0d033e4e790ace417ccde5969585ff5e8b7'
-            '7d713257c2620a6551061399e02ffdf47241640b14d8ce34cc461f96b6aa514f'
-            'bab20a7cb889b4e5f342a09ae6f9c96efe1682917270fb61464828a73b81ae63'
-            'abc9cadd59e33ad2d149d4e736fc38239e877f1225c390facbc4373bc1cd748c'
-            'SKIP')
+        "core.zip"
+        "moon.sh")
+sha256sums=('197b04be0e292be8a7797893695b5df0cee736975249b79f2c8919cca6bc66d0'
+            'f5766fd8737129140b2059cb8d23af00cb194b83b47fdf6bf004570fcb8f0b32'
+            '04f74df31051bb0f16243b9ff8fb3975445b2620c4e18edbad30de0bf2adf7a0'
+            '53842027da2c14f2bcceaa803fd0a276043e147ab2052bff8bbce6ee6955c50f'
+            'e3df89202105fe5ebdce9c8717b71059ddcd5eed60122783f93b0e4c83663183'
+            '81f34a423b2a40ed0c499d1c148a7e33a300ce7c8505146c12586ee81a78458b'
+            'aca86512feb3099ab5f69dcb6b95c55c349dfa91ed6625e561fe6368485f9af6'
+            '58b177a4b0dda035620b8f5f44f1f26a251203924d1df927a8a00e0a78f9c13c')
 
 pkgver() {
   cd "${srcdir}"
@@ -33,12 +35,13 @@ pkgver() {
 }
 
 package() {
-  install -Dm 755 "${srcdir}/moon"     "${pkgdir}/usr/bin/moon"
+  install -Dm 755 "${srcdir}/moon"     "${pkgdir}/usr/lib/moon"
+  install -Dm 755 "${srcdir}/moon.sh"  "${pkgdir}/usr/bin/moon"
   install -Dm 755 "${srcdir}/moonc"    "${pkgdir}/usr/bin/moonc"
+  install -Dm 755 "${srcdir}/moondoc"  "${pkgdir}/usr/bin/moondoc"
   install -Dm 755 "${srcdir}/moonfmt"  "${pkgdir}/usr/bin/moonfmt"
   install -Dm 755 "${srcdir}/moonrun"  "${pkgdir}/usr/bin/moonrun"
   install -Dm 755 "${srcdir}/mooninfo" "${pkgdir}/usr/bin/mooninfo"
-  install -Dm 755 "${srcdir}/moondoc" "${pkgdir}/usr/bin/moondoc"
   mkdir -p "${pkgdir}/usr/share/moonbit/lib"
   cp -r "${srcdir}/core" "${pkgdir}/usr/share/moonbit/lib/"
 }
