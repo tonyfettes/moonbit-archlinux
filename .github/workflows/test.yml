@@ -7,7 +7,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout source
+      - name: Checkout source
         uses: actions/checkout@v2
-      - name: test core
+      - name: Test
         uses: ./.github/actions/bundle
