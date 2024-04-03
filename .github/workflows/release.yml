@@ -36,7 +36,7 @@ jobs:
             git tag "v${pkgver}"
             git push origin "v${pkgver}"
           fi
-          sed -i -E 's!core.zip!https://github.com/${{ github.repository }}/releases/download/${pkgver}/core.zip!g' PKGBUILD
+          sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/v${pkgver}/core.zip\"!g" PKGBUILD
 
       - name: Publish
         uses: ncipollo/release-action@v1
@@ -49,6 +49,7 @@ jobs:
         with:
           pkgname: moonbit-bin
           pkgbuild: ./PKGBUILD
+          assets: ./moon.sh
           commit_username: ${{ github.repository_owner }}
           commit_email: ${{ github.repository_owner }}@users.noreply.github.com
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
