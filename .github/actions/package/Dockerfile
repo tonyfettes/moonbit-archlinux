@@ -15,6 +15,6 @@ ADD --chown=build:build https://cli.moonbitlang.com/ubuntu_x86/mooninfo /build/m
 COPY --chown=build:build PKGBUILD /build/PKGBUILD
 COPY --chown=build:build core.zip /build/core.zip
 COPY --chown=build:build moon.sh  /build/moon.sh
-COPY --chown=build:build .github/actions/package/entrypoint.sh /entrypoint.sh
+COPY --chown=build:build entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]

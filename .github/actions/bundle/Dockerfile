@@ -1,6 +1,6 @@
 FROM quay.io/archlinux/archlinux:base-devel AS base
 
-COPY .github/actions/bundle/entrypoint.sh /entrypoint.sh
+COPY ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 ADD https://cli.moonbitlang.com/ubuntu_x86/moon     /usr/bin/moon

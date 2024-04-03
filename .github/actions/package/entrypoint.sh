@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 makepkg
-cp *.pkg.tar.zst /github/workspace
+cp ./*.pkg.tar.zst /github/workspace
