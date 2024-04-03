@@ -5,6 +5,7 @@ set -xeuo
 cp -r /github/workspace/* /build/
 if (cd /build && makepkg) then
   echo "makepkg succeeded"
+  (cd /build && updpkgsums)
 else
   echo "makepkg failed, updating checksums..."
   (cd /build && updpkgsums)
