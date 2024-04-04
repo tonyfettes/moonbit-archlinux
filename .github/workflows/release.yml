@@ -17,10 +17,10 @@ jobs:
       - name: Bundle MoonBit core
         uses: ./.github/actions/bundle
 
-      - name: Build Arch Linux packages
-        uses: ./.github/actions/package
-
       - name: Update PKGBUILD
+        uses: ./.github/actions/update
+
+      - name: Commit version change
         id: pkgbuild
         run: |
           pkgver=$(git diff PKGBUILD | sed -n -E 's/\+pkgver=//p')
@@ -35,14 +35,13 @@ jobs:
               git commit -a -m "chore: update PKGBUILD [skip ci]"
               git push origin HEAD:main
             fi
-            if [ -z "${pkgver}" ]; then
-              echo "No changes to PKGBUILD"
-            else
-              git tag "v${pkgver}"
-              git push origin "v${pkgver}"
-            fi
+            git tag "v${pkgver}"
+            git push origin "v${pkgver}"
             sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/v${pkgver}/core.zip\"!g" PKGBUILD
           fi
+
+      - name: Build Arch Linux package
+        uses: ./.github/actions/package
 
       - name: Publish
         if: ${{ steps.pkgbuild.outputs.TAG != 'x' }}
