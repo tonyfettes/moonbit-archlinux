@@ -9,5 +9,15 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Test
+
+      - name: Bundle MoonBit core
         uses: ./.github/actions/bundle
+
+      - name: Update PKGBUILD
+        id: pkgbuild
+        run: |
+          pkgver=$(cat PKGBUILD | sed -n -E 's/pkgver=//p')
+          sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/v${pkgver}/core.zip\"!g" PKGBUILD
+
+      - name: Build Arch Linux package
+        uses: ./.github/actions/package
