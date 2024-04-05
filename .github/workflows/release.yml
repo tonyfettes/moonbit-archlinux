@@ -47,15 +47,15 @@ jobs:
           git push origin "${tag}"
           sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/${tag}/core.zip\"!g" PKGBUILD
 
-      - name: Build Arch Linux package
-        uses: ./.github/actions/package
-
-      - name: Publish
+      - name: Release
         if: ${{ steps.pkgbuild.outputs.TAG != 'x' }}
         uses: ncipollo/release-action@v1
         with:
-          artifacts: '*.pkg.tar.zst,core.zip'
+          artifacts: 'core.zip'
           tag: ${{ steps.pkgbuild.outputs.TAG }}
+
+      - name: Build Arch Linux package
+        uses: ./.github/actions/package
 
       - name: Publish to AUR
         if: ${{ steps.pkgbuild.outputs.TAG != 'x' }}
