@@ -23,22 +23,29 @@ jobs:
       - name: Commit version change
         id: pkgbuild
         run: |
-          pkgver=$(git diff PKGBUILD | sed -n -E 's/\+pkgver=//p')
-          if [ -z "${pkgver}" ]; then
+          git clone https://aur.archlinux.org/moonbit-bin.git ./.moonbit-bin
+          oldver=$(sed -n -E 's/^pkgver=//p' ./.moonbit-bin/PKGBUILD)
+          oldrel=$(sed -n -E 's/^pkgrel=//p' ./.moonbit-bin/PKGBUILD)
+          pkgver=$(diff -u ./.moonbit-bin/PKGBUILD PKGBUILD | sed -n -E 's/\+pkgver=//p')
+          pkgrel=$(diff -u ./.moonbit-bin/PKGBUILD PKGBUILD | sed -n -E 's/\+pkgrel=//p')
+          if [ -z "${pkgver}" ] && [ -z "${pkgrel}" ]; then
             echo "TAG=x" >> "$GITHUB_OUTPUT"
-          else
-            echo "TAG=v${pkgver}" >> "$GITHUB_OUTPUT"
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
-            git config --local user.name "github-actions[bot]"
-            git add PKGBUILD
-            if [ -n "$(git status --porcelain)" ]; then
-              git commit -a -m "chore: update PKGBUILD [skip ci]"
-              git push origin HEAD:main
-            fi
-            git tag "v${pkgver}"
-            git push origin "v${pkgver}"
-            sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/v${pkgver}/core.zip\"!g" PKGBUILD
+            return
           fi
+          pkgver="${pkgver:-$oldver}"
+          pkgrel="${pkgrel:-$oldrel}"
+          tag="v${pkgver}-${pkgrel}"
+          echo "TAG=${tag}" >> "$GITHUB_OUTPUT"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add PKGBUILD
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -a -m "chore: update PKGBUILD [skip ci]"
+            git push origin HEAD:main
+          fi
+          git tag "${tag}"
+          git push origin "${tag}"
+          sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/${tag}/core.zip\"!g" PKGBUILD
 
       - name: Build Arch Linux package
         uses: ./.github/actions/package

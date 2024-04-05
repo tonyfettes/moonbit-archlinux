@@ -2,12 +2,13 @@
 
 pkgname=moonbit-bin
 pkgver=0.1.0.20240403
-pkgrel=2
+pkgrel=3
 pkgdesc="Intelligent developer platform for Cloud and Edge using WASM"
 arch=('x86_64')
 url="https://www.moonbitlang.com/"
 license=('unknown')
 depends=('glibc' 'gcc-libs' 'git')
+options=('!debug')
 provides=("moonbit")
 conflicts=("moonbit")
 _origin="https://cli.moonbitlang.com"
