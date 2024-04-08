@@ -12,6 +12,3 @@ jobs:
 
       - name: Bundle MoonBit core
         uses: ./.github/actions/bundle
-
-      - name: Build Arch Linux package
-        uses: ./.github/actions/package
