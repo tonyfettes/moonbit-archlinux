@@ -23,6 +23,7 @@ jobs:
       - name: Commit version change
         id: pkgbuild
         run: |
+          set -xeuo
           git clone https://aur.archlinux.org/moonbit-bin.git ./.moonbit-bin
           oldver=$(sed -n -E 's/^pkgver=//p' ./.moonbit-bin/PKGBUILD)
           oldrel=$(sed -n -E 's/^pkgrel=//p' ./.moonbit-bin/PKGBUILD)
