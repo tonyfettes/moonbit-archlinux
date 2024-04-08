@@ -12,63 +12,32 @@ jobs:
       contents: write
     steps:
       - name: Checkout source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Bundle MoonBit core
         uses: ./.github/actions/bundle
 
-      - name: Update PKGBUILD
-        uses: ./.github/actions/update
-
       - name: Commit version change
-        id: pkgbuild
+        id: commit
         run: |
-          set -xeuo
-          git clone https://aur.archlinux.org/moonbit-bin.git ./.moonbit-bin
-          oldver=$(sed -n -E 's/^pkgver=//p' ./.moonbit-bin/PKGBUILD)
-          oldrel=$(sed -n -E 's/^pkgrel=//p' ./.moonbit-bin/PKGBUILD)
-          pkgver=$(diff -u ./.moonbit-bin/PKGBUILD PKGBUILD | sed -n -E 's/\+pkgver=//p')
-          pkgrel=$(diff -u ./.moonbit-bin/PKGBUILD PKGBUILD | sed -n -E 's/\+pkgrel=//p')
-          if [ -z "${pkgver}" ] && [ -z "${pkgrel}" ]; then
-            echo "TAG=x" >> "$GITHUB_OUTPUT"
-            return
-          fi
-          pkgver="${pkgver:-$oldver}"
-          pkgrel="${pkgrel:-$oldrel}"
-          tag="v${pkgver}-${pkgrel}"
-          echo "TAG=${tag}" >> "$GITHUB_OUTPUT"
+          tag="v$(cat version)"
+          echo "Updating version to $remote_version"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add PKGBUILD
+          git add version
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -a -m "chore: update PKGBUILD [skip ci]"
+            git commit -a -m "update version"
             git push origin HEAD:main
+            git tag "$tag"
+            git push origin "$tag"
+            echo "TAG=$tag" >> "$GITHUB_OUTPUT"
+          else
+            echo "TAG=x" >> "$GITHUB_OUTPUT"
           fi
-          git tag "${tag}"
-          git push origin "${tag}"
-          sed -i -E "s!\"core.zip\"!\"https://github.com/${{ github.repository }}/releases/download/${tag}/core.zip\"!g" PKGBUILD
 
       - name: Release
-        if: ${{ steps.pkgbuild.outputs.TAG != 'x' }}
+        if: ${{ steps.commit.outputs.TAG != 'x' }}
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'core.zip'
-          tag: ${{ steps.pkgbuild.outputs.TAG }}
-
-      - name: Build Arch Linux package
-        uses: ./.github/actions/package
-
-      - name: Publish to AUR
-        if: ${{ steps.pkgbuild.outputs.TAG != 'x' }}
-        uses: KSXGitHub/github-actions-deploy-aur@v2
-        with:
-          pkgname: moonbit-bin
-          pkgbuild: ./PKGBUILD
-          assets: ./moon.sh
-          commit_username: ${{ github.repository_owner }}
-          commit_email: ${{ github.repository_owner }}@users.noreply.github.com
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          commit_message: update
-
-      - name: Check
-        uses: ./.github/actions/check
+          tag: ${{ steps.commit.outputs.TAG }}
