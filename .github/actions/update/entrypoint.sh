@@ -1,7 +1,5 @@
 #!/usr/bin/env sh
 
-set -e
-
 cp -r /github/workspace /build
 
 (cd /build/workspace/ && {
