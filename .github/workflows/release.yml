@@ -55,3 +55,11 @@ jobs:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           commit_message: update
           allow_empty_commits: false
+
+      - name: Commit to git
+        run: |
+          git add PKGBUILD
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -a -m "update PKGBUILD"
+            git push origin HEAD:main
+          fi
