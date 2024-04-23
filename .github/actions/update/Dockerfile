@@ -7,3 +7,6 @@ RUN useradd -d /build -U -G wheel build && \
 
 USER build
 WORKDIR /build
+
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
