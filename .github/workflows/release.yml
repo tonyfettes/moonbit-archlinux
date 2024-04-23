@@ -59,6 +59,7 @@ jobs:
       - name: Commit to git
         run: |
           git add PKGBUILD
+          git clean -x -f -d
           if [ -n "$(git status --porcelain)" ]; then
             git commit -a -m "update PKGBUILD"
             git push origin HEAD:main
