@@ -8,7 +8,7 @@ cp -r /github/workspace /build
   makepkg
   rm core.zip
   updpkgsums
-  makepkg
+  makepkg -f
   cp PKGBUILD /github/workspace/
   makepkg --printsrcinfo > .SRCINFO
   cp .SRCINFO /github/workspace/
